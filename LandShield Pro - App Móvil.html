@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LandShield Pro</title>
+<style>
+:root{
+  --bg:#070d1a; --panel:#101d33; --panel2:#0c1729; --line:#1e3050;
+  --gold:#d4af7a; --blue:#2f9fd6; --text:#e9eef6; --muted:#8496b7;
+  --ok:#3ecf8e; --warn:#e3b341; --danger:#e35d5d;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
+body{display:flex;justify-content:center;align-items:flex-start;min-height:100%}
+#phone{width:100%;max-width:420px;min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#12233f 0%,var(--bg) 60%);display:flex;flex-direction:column;position:relative;overflow-x:hidden}
+header.topbar{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(7,13,26,.92);backdrop-filter:blur(6px);z-index:5}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .hex{width:30px;height:30px;border:1.5px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.brand h1{font-size:16px;margin:0;letter-spacing:.3px}
+.brand small{color:var(--muted);font-size:11px;display:block}
+.role-pill{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--blue);color:var(--blue)}
+.role-pill.admin{border-color:var(--gold);color:var(--gold)}
+main{flex:1;padding:18px 18px 90px;overflow-y:auto}
+h2.section{font-size:13px;color:var(--muted);margin:22px 0 10px;font-weight:600}
+h2.section:first-child{margin-top:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{font-size:22px;display:block}
+.stat span{font-size:11px;color:var(--muted)}
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:border-color .15s}
+.svc:active{border-color:var(--blue)}
+.svc b{display:block;font-size:13px;margin-bottom:4px}
+.svc span{font-size:11px;color:var(--muted)}
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
+.b-pend{background:rgba(227,179,65,.15);color:var(--warn)}
+.b-proc{background:rgba(47,159,214,.15);color:var(--blue)}
+.b-ok{background:rgba(62,207,142,.15);color:var(--ok)}
+.ticket{border-bottom:1px solid var(--line);padding:12px 0;display:flex;justify-content:space-between;gap:10px}
+.ticket:last-child{border-bottom:none}
+.ticket .meta{font-size:11px;color:var(--muted);margin-top:3px}
+select,input,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px;font-size:14px;margin-bottom:12px;font-family:inherit}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+button.primary{width:100%;background:linear-gradient(90deg,var(--blue),#1c78ac);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:600;font-size:14px}
+button.ghost{width:100%;background:transparent;border:1px solid var(--line);color:var(--text);padding:12px;border-radius:12px;font-size:13px;margin-top:8px}
+nav.bottom{position:fixed;bottom:0;width:100%;max-width:420px;background:rgba(10,18,35,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px))}
+nav.bottom button{flex:1;background:none;border:none;color:var(--muted);font-size:10px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:4px}
+nav.bottom button.active{color:var(--blue)}
+nav.bottom button.active.gold{color:var(--gold)}
+nav.bottom .ic{font-size:18px}
+#login{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 28px;text-align:center}
+#login .hex{width:60px;height:60px;border:2px solid var(--gold);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px}
+#login h1{font-size:26px;margin:0}
+#login p{color:var(--muted);font-size:13px;margin:8px 0 30px}
+.role-btn{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.role-btn .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.role-btn.client .ic{background:rgba(47,159,214,.15);color:var(--blue)}
+.role-btn.admin .ic{background:rgba(212,175,122,.15);color:var(--gold)}
+.role-btn b{display:block;font-size:14px}
+.role-btn span{font-size:11px;color:var(--muted)}
+.contact-row{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.contact-row:last-child{border:none}
+.contact-row .ic{width:34px;height:34px;border-radius:9px;background:var(--panel2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+a{color:var(--blue);text-decoration:none}
+.empty{text-align:center;color:var(--muted);font-size:12px;padding:30px 10px}
+</style>
+</head>
+<body>
+<div id="phone"></div>
+<script>
+const state = { role:null, tab:'home', tickets:[
+  {id:'LS-0231',svc:'Soporte Correctivo',cliente:'Textiles Andina SAC',status:'proc',desc:'Falla en servidor SRV-02, no responde a ping.'},
+  {id:'LS-0230',svc:'Mantenimiento Preventivo',cliente:'Grupo Velmar',status:'ok',desc:'Limpieza y actualización de estaciones de trabajo.'},
+  {id:'LS-0229',svc:'Seguridad y Respaldo',cliente:'Consultora Dominus',status:'pend',desc:'Configurar respaldo automático en la nube.'}
+], equipos:[
+  {serie:'SRV-01',modelo:'Dell PowerEdge R440',resp:'Torres, Ana',estado:'ok'},
+  {serie:'SRV-02',modelo:'HP ProLiant DL380',resp:'Ramírez, Luis',estado:'warn'},
+  {serie:'WKS-14',modelo:'Lenovo ThinkCentre M70',resp:'Salas, Carla',estado:'ok'}
+], clientes:[
+  {n:'Textiles Andina SAC',plan:'Corporativo',tickets:1},
+  {n:'Grupo Velmar',plan:'Preventivo',tickets:0},
+  {n:'Consultora Dominus',plan:'Seguridad',tickets:1}
+]};
+
+const badge = s => s==='pend'?'<span class="badge b-pend">Pendiente</span>':s==='proc'?'<span class="badge b-proc">En proceso</span>':'<span class="badge b-ok">Resuelto</span>';
+const dot = s => s==='ok'?'🟢':s==='warn'?'🟡':'🔴';
+
+function render(){
+  const p = document.getElementById('phone');
+  if(!state.role){ p.innerHTML = loginView(); return; }
+  p.innerHTML = `
+    <header class="topbar">
+      <div class="brand"><div class="hex">🔒</div><div><h1>LandShield Pro</h1><small>${state.role==='admin'?'Panel Administrador':'Portal Cliente'}</small></div></div>
+      <div class="role-pill ${state.role}" onclick="logout()">Salir</div>
+    </header>
+    <main>${state.role==='admin'?adminView():clientView()}</main>
+    ${bottomNav()}`;
+}
+
+function loginView(){
+  return `<div id="login">
+    <div class="hex">🔒</div>
+    <h1>LandShield Pro</h1>
+    <p>Soluciones corporativas de TI &amp; seguridad<br>Elige un perfil para ingresar</p>
+    <div class="role-btn client" onclick="login('cliente')"><div class="ic">👤</div><div><b>Ingresar como Cliente</b><span>Solicita servicios y revisa tus equipos</span></div></div>
+    <div class="role-btn admin" onclick="login('admin')"><div class="ic">🛡️</div><div><b>Ingresar como Administrador</b><span>Gestiona tickets, clientes y equipos</span></div></div>
+  </div>`;
+}
+function login(r){ state.role = r==='admin'?'admin':'cliente'; state.tab='home'; render(); }
+function logout(){ state.role=null; render(); }
+
+function bottomNav(){
+  if(state.role==='admin'){
+    return `<nav class="bottom">
+      ${navBtn('home','📊','Panel','gold')}
+      ${navBtn('tickets','🎫','Tickets','gold')}
+      ${navBtn('clientes','🏢','Clientes','gold')}
+      ${navBtn('equipos','🖥️','Equipos','gold')}
+      ${navBtn('perfil','⚙️','Perfil','gold')}
+    </nav>`;
+  }
+  return `<nav class="bottom">
+    ${navBtn('home','🏠','Inicio')}
+    ${navBtn('solicitar','➕','Solicitar')}
+    ${navBtn('mistickets','🎫','Mis tickets')}
+    ${navBtn('misequipos','🖥️','Mis equipos')}
+    ${navBtn('perfil','☎️','Soporte')}
+  </nav>`;
+}
+function navBtn(tab,icon,label,cls){
+  const active = state.tab===tab ? 'active'+(cls?' '+cls:''):'';
+  return `<button class="${active}" onclick="go('${tab}')"><span class="ic">${icon}</span>${label}</button>`;
+}
+function go(tab){ state.tab=tab; render(); }
+
+function clientView(){
+  if(state.tab==='home') return `
+    <h2 class="section">Resumen</h2>
+    <div class="stat-row">
+      <div class="stat"><b>${state.tickets.length}</b><span>Tickets activos</span></div>
+      <div class="stat"><b>${state.equipos.length}</b><span>Equipos registrados</span></div>
+    </div>
+    <h2 class="section">Servicios</h2>
+    <div class="service-grid">
+      <div class="svc" onclick="go('solicitar')"><b>🛠 Preventivo</b><span>Mantenimiento programado</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>⚡ Correctivo</b><span>Soporte urgente</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>🛡 Seguridad</b><span>Respaldo y firewall</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>🎧 Asistencia</b><span>Mesa de ayuda</span></div>
+    </div>
+    <h2 class="section">Último ticket</h2>
+    <div class="card"><div class="ticket"><div><b>${state.tickets[0].id}</b><div class="meta">${state.tickets[0].svc}</div></div>${badge(state.tickets[0].status)}</div></div>`;
+
+  if(state.tab==='solicitar') return `
+    <h2 class="section">Solicitar servicio</h2>
+    <div class="card">
+      <label>Tipo de servicio</label>
+      <select id="svcType"><option>Mantenimiento Preventivo</option><option>Soporte Correctivo</option><option>Seguridad y Respaldo</option><option>Asistencia Corporativa</option></select>
+      <label>Prioridad</label>
+      <select id="svcPrio"><option>Normal</option><option>Alta</option><option>Urgente</option></select>
+      <label>Describe el problema o necesidad</label>
+      <textarea id="svcDesc" rows="4" placeholder="Ej: El servidor SRV-02 no enciende..."></textarea>
+      <button class="primary" onclick="crearTicket()">Enviar solicitud</button>
+    </div>`;
+
+  if(state.tab==='mistickets') return `
+    <h2 class="section">Mis tickets</h2>
+    <div class="card">${state.tickets.map(t=>`<div class="ticket"><div><b>${t.id} · ${t.svc}</b><div class="meta">${t.desc}</div></div>${badge(t.status)}</div>`).join('')}</div>`;
+
+  if(state.tab==='misequipos') return `
+    <h2 class="section">Mis equipos</h2>
+    <div class="card">${state.equipos.map(e=>`<div class="ticket"><div><b>${dot(e.estado)} ${e.serie}</b><div class="meta">${e.modelo}</div></div></div>`).join('')}</div>`;
+
+  if(state.tab==='perfil') return `
+    <h2 class="section">Contacto y soporte</h2>
+    <div class="card">
+      <div class="contact-row"><div class="ic">💬</div><div><b>WhatsApp</b><div class="meta"><a href="https://wa.me/51993032328" target="_blank">+51 993 032 328</a></div></div></div>
+      <div class="contact-row"><div class="ic">✉️</div><div><b>Email</b><div class="meta"><a href="mailto:jlandas3115@gmail.com">jlandas3115@gmail.com</a></div></div></div>
+    </div>
+    <h2 class="section">Plan contratado</h2>
+    <div class="card"><b>Corporativo</b><div class="meta" style="color:var(--muted);margin-top:4px">Incluye mantenimiento, soporte y respaldo en la nube.</div></div>`;
+  return '';
+}
+
+function crearTicket(){
+  const svc = document.getElementById('svcType').value;
+  const desc = document.getElementById('svcDesc').value || 'Sin descripción.';
+  const id = 'LS-0'+(232+state.tickets.length);
+  state.tickets.unshift({id,svc,cliente:'Tu empresa',status:'pend',desc});
+  state.tab='mistickets';
+  render();
+}
+
+function adminView(){
+  if(state.tab==='home'){
+    const pend = state.tickets.filter(t=>t.status==='pend').length;
+    return `
+    <h2 class="section">Panel general</h2>
+    <div class="stat-row">
+      <div class="stat"><b>${state.tickets.length}</b><span>Tickets totales</span></div>
+      <div class="stat"><b>${pend}</b><span>Pendientes</span></div>
+      <div class="stat"><b>${state.clientes.length}</b><span>Clientes activos</span></div>
+      <div class="stat"><b>${state.equipos.length}</b><span>Equipos monitoreados</span></div>
+    </div>
+    <h2 class="section">Actividad reciente</h2>
+    <div class="card">${state.tickets.slice(0,3).map(t=>`<div class="ticket"><div><b>${t.id} · ${t.cliente}</b><div class="meta">${t.svc}</div></div>${badge(t.status)}</div>`).join('')}</div>`;
+  }
+  if(state.tab==='tickets') return `
+    <h2 class="section">Todos los tickets</h2>
+    <div class="card">${state.tickets.map((t,i)=>`
+      <div class="ticket"><div><b>${t.id} · ${t.cliente}</b><div class="meta">${t.svc} — ${t.desc}</div></div>
+      <select onchange="cambiarEstado(${i},this.value)" style="width:auto;margin:0;padding:5px 8px;font-size:11px">
+        <option value="pend" ${t.status==='pend'?'selected':''}>Pendiente</option>
+        <option value="proc" ${t.status==='proc'?'selected':''}>En proceso</option>
+        <option value="ok" ${t.status==='ok'?'selected':''}>Resuelto</option>
+      </select></div>`).join('')}</div>`;
+  if(state.tab==='clientes') return `
+    <h2 class="section">Clientes</h2>
+    <div class="card">${state.clientes.map(c=>`<div class="ticket"><div><b>${c.n}</b><div class="meta">Plan ${c.plan}</div></div><span class="badge ${c.tickets>0?'b-proc':'b-ok'}">${c.tickets} ticket(s)</span></div>`).join('')}</div>`;
+  if(state.tab==='equipos') return `
+    <h2 class="section">Inventario de equipos</h2>
+    <div class="card">${state.equipos.map(e=>`<div class="ticket"><div><b>${dot(e.estado)} ${e.serie}</b><div class="meta">${e.modelo} · Resp: ${e.resp}</div></div></div>`).join('')}</div>`;
+  if(state.tab==='perfil') return `
+    <h2 class="section">Cuenta</h2>
+    <div class="card"><b>Administrador LandShield Pro</b><div class="meta" style="color:var(--muted);margin-top:4px">jlandas3115@gmail.com</div></div>
+    <button class="ghost" onclick="logout()">Cerrar sesión</button>`;
+  return '';
+}
+function cambiarEstado(i,val){ state.tickets[i].status=val; render(); }
+
+render();
+</script>
+</body>
+</html>
