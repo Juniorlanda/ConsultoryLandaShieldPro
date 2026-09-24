@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LandShield Pro</title>
+<style>
+:root{
+  --bg:#070d1a; --panel:#101d33; --panel2:#0c1729; --line:#1e3050;
+  --gold:#d4af7a; --blue:#2f9fd6; --text:#e9eef6; --muted:#8496b7;
+  --ok:#3ecf8e; --warn:#e3b341; --danger:#e35d5d;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
+body{display:flex;justify-content:center;align-items:flex-start;min-height:100%}
+#phone{width:100%;max-width:420px;min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#12233f 0%,var(--bg) 60%);display:flex;flex-direction:column;position:relative}
+header.topbar{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(7,13,26,.92);backdrop-filter:blur(6px);z-index:5}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .hex{width:30px;height:30px;border:1.5px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.brand h1{font-size:16px;margin:0}
+.brand small{color:var(--muted);font-size:11px;display:block}
+.role-pill{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--blue);color:var(--blue);cursor:pointer}
+.role-pill.admin{border-color:var(--gold);color:var(--gold)}
+main{flex:1;padding:18px 18px 90px;overflow-y:auto}
+h2.section{font-size:13px;color:var(--muted);margin:22px 0 10px;font-weight:600}
+h2.section:first-child{margin-top:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{font-size:22px;display:block}
+.stat span{font-size:11px;color:var(--muted)}
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer}
+.svc b{display:block;font-size:13px;margin-bottom:4px}
+.svc span{font-size:11px;color:var(--muted)}
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
+.b-pend{background:rgba(227,179,65,.15);color:var(--warn)}
+.b-proc{background:rgba(47,159,214,.15);color:var(--blue)}
+.b-ok{background:rgba(62,207,142,.15);color:var(--ok)}
+.ticket{border-bottom:1px solid var(--line);padding:12px 0}
+.ticket:last-child{border-bottom:none}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.meta{font-size:11px;color:var(--muted);margin-top:3px}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mini-btn{font-size:11px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
+select,input,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px;font-size:14px;margin-bottom:12px;font-family:inherit}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+button.primary{width:100%;background:linear-gradient(90deg,var(--blue),#1c78ac);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:600;font-size:14px}
+button.ghost{width:100%;background:transparent;border:1px solid var(--line);color:var(--text);padding:12px;border-radius:12px;font-size:13px;margin-top:8px}
+.err{color:var(--danger);font-size:12px;margin:-4px 0 12px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--blue);color:var(--text);padding:10px 16px;border-radius:10px;font-size:12px;z-index:20;max-width:90%;text-align:center}
+nav.bottom{position:fixed;bottom:0;width:100%;max-width:420px;background:rgba(10,18,35,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;padding:8px 4px}
+nav.bottom button{flex:1;background:none;border:none;color:var(--muted);font-size:10px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:4px}
+nav.bottom button.active{color:var(--blue)}
+nav.bottom button.active.gold{color:var(--gold)}
+nav.bottom .ic{font-size:18px}
+#login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 28px}
+#login .center{text-align:center}
+#login .hex{width:60px;height:60px;border:2px solid var(--gold);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px}
+#login h1{font-size:26px;margin:0}
+#login p{color:var(--muted);font-size:13px;margin:8px 0 26px}
+.role-btn{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.role-btn .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.role-btn.client .ic{background:rgba(47,159,214,.15);color:var(--blue)}
+.role-btn.admin .ic{background:rgba(212,175,122,.15);color:var(--gold)}
+.role-btn b{display:block;font-size:14px}
+.role-btn span{font-size:11px;color:var(--muted)}
+.contact-row{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.contact-row:last-child{border:none}
+.contact-row .ic{width:34px;height:34px;border-radius:9px;background:var(--panel2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+a{color:var(--blue);text-decoration:none}
+.hint{font-size:11px;color:var(--muted);margin-top:-8px;margin-bottom:14px}
+.backlink{font-size:12px;color:var(--muted);margin-top:6px;display:inline-block;cursor:pointer}
+.loading{display:flex;align-items:center;justify-content:center;height:100vh;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div id="phone"><div class="loading">Cargando LandShield Pro…</div></div>
+<script>
+const S = {
+  token: localStorage.getItem('ls_token') || null,
+  role: localStorage.getItem('ls_role') || null,
+  clienteId: localStorage.getItem('ls_cliente') || null,
+  empresa: localStorage.getItem('ls_empresa') || null,
+  view: 'select', tab: 'home', loginErr: '',
+  tickets: [], clientes: [], equipos: [], toast: ''
+};
+
+async function api(path, opts={}){
+  const headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{});
+  if(S.token) headers['Authorization'] = 'Bearer '+S.token;
+  const res = await fetch(path, Object.assign({}, opts, {headers}));
+  return res.json();
+}
+
+async function loadData(){
+  const [t, m] = await Promise.all([api('/api/tickets'), api('/api/meta')]);
+  if(t.ok) S.tickets = t.tickets;
+  if(m.ok){ S.clientes = m.clientes; S.equipos = m.equipos; }
+}
+
+function showToast(msg){ S.toast = msg; render(); setTimeout(()=>{ S.toast=''; render(); }, 3500); }
+
+async function boot(){
+  if(S.token && S.role){
+    S.view='app';
+    await loadData();
+  }
+  render();
+}
+
+function render(){
+  const p = document.getElementById('phone');
+  if(!S.role || S.view!=='app'){ p.innerHTML = loginFlow() + (S.toast?`<div class="toast">${S.toast}</div>`:''); return; }
+  p.innerHTML = `
+    <header class="topbar">
+      <div class="brand"><div class="hex">🔒</div><div><h1>LandShield Pro</h1><small>${S.role==='admin'?'Panel Administrador':S.empresa}</small></div></div>
+      <div class="role-pill ${S.role}" onclick="logout()">Salir</div>
+    </header>
+    <main>${S.role==='admin'?adminView():clientView()}</main>
+    ${bottomNav()}
+    ${S.toast?`<div class="toast">${S.toast}</div>`:''}`;
+}
+
+function loginFlow(){
+  if(S.view==='select') return `<div id="login"><div class="center">
+    <div class="hex">🔒</div><h1>LandShield Pro</h1>
+    <p>Soluciones corporativas de TI &amp; seguridad</p></div>
+    <div class="role-btn client" onclick="S.view='client-login';render()"><div class="ic">👤</div><div><b>Ingresar como Cliente</b><span>Usuario y contraseña de tu empresa</span></div></div>
+    <div class="role-btn admin" onclick="S.view='admin-login';render()"><div class="ic">🛡️</div><div><b>Ingresar como Administrador</b><span>Usuario y contraseña de LandShield</span></div></div>
+  </div>`;
+  if(S.view==='client-login') return loginForm('Cliente','cliente','Ej: textiles-andina / ta2026');
+  if(S.view==='admin-login') return loginForm('Administrador','admin','admin / (contraseña configurada)');
+  return '';
+}
+function loginForm(label, role, hint){
+  return `<div id="login"><div class="center"><div class="hex">🔒</div><h1>Acceso ${label}</h1>
+  <p>Ingresa tus credenciales</p></div>
+  <label>Usuario</label><input id="lu" placeholder="usuario">
+  <label>Contraseña</label><input id="lp" type="password" placeholder="contraseña">
+  ${S.loginErr?`<div class="err">${S.loginErr}</div>`:''}
+  <button class="primary" onclick="doLogin('${role}')">Ingresar</button>
+  <div class="hint">Credenciales de prueba: ${hint}</div>
+  <a class="backlink" onclick="S.view='select';S.loginErr='';render()">← volver</a>
+  </div>`;
+}
+async function doLogin(role){
+  const user=document.getElementById('lu').value.trim(), password=document.getElementById('lp').value;
+  const r = await api('/api/login', {method:'POST', body: JSON.stringify({role, user, password})});
+  if(!r.ok){ S.loginErr = r.error || 'Error de acceso'; render(); return; }
+  S.token=r.token; S.role=r.role; S.clienteId=r.clienteId; S.empresa=r.empresa;
+  localStorage.setItem('ls_token', r.token); localStorage.setItem('ls_role', r.role);
+  localStorage.setItem('ls_cliente', r.clienteId||''); localStorage.setItem('ls_empresa', r.empresa||'');
+  S.view='app'; S.tab='home'; S.loginErr='';
+  await loadData(); render();
+}
+function logout(){ localStorage.clear(); Object.assign(S,{token:null,role:null,clienteId:null,empresa:null,view:'select'}); render(); }
+
+function bottomNav(){
+  if(S.role==='admin') return `<nav class="bottom">
+    ${navBtn('home','📊','Panel','gold')}${navBtn('tickets','🎫','Tickets','gold')}
+    ${navBtn('clientes','🏢','Clientes','gold')}${navBtn('equipos','🖥️','Equipos','gold')}
+    ${navBtn('perfil','⚙️','Perfil','gold')}</nav>`;
+  return `<nav class="bottom">
+    ${navBtn('home','🏠','Inicio')}${navBtn('solicitar','➕','Solicitar')}
+    ${navBtn('mistickets','🎫','Mis tickets')}${navBtn('misequipos','🖥️','Mis equipos')}
+    ${navBtn('perfil','☎️','Soporte')}</nav>`;
+}
+function navBtn(tab,icon,label,cls){
+  const active = S.tab===tab ? 'active'+(cls?' '+cls:''):'';
+  return `<button class="${active}" onclick="go('${tab}')"><span class="ic">${icon}</span>${label}</button>`;
+}
+function go(tab){ S.tab=tab; render(); }
+const dot = s => s==='ok'?'🟢':s==='warn'?'🟡':'🔴';
+const badge = s => s==='pend'?'<span class="badge b-pend">Pendiente</span>':s==='proc'?'<span class="badge b-proc">En proceso</span>':'<span class="badge b-ok">Resuelto</span>';
+const clienteById = id => S.clientes.find(c=>c.clienteId===id) || {empresa:id};
+
+function clientView(){
+  const mt = S.tickets, me = S.equipos;
+  if(S.tab==='home') return `
+    <h2 class="section">Resumen</h2>
+    <div class="stat-row"><div class="stat"><b>${mt.length}</b><span>Tickets registrados</span></div><div class="stat"><b>${me.length}</b><span>Equipos registrados</span></div></div>
+    <h2 class="section">Servicios</h2>
+    <div class="service-grid">
+      <div class="svc" onclick="go('solicitar')"><b>🛠 Preventivo</b><span>Mantenimiento programado</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>⚡ Correctivo</b><span>Soporte urgente</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>🛡 Seguridad</b><span>Respaldo y firewall</span></div>
+      <div class="svc" onclick="go('solicitar')"><b>🎧 Asistencia</b><span>Mesa de ayuda</span></div>
+    </div>
+    <h2 class="section">Último ticket</h2>
+    <div class="card">${mt[0]?`<div class="ticket"><div class="row"><div><b>${mt[0].id}</b><div class="meta">${mt[0].svc}</div></div>${badge(mt[0].status)}</div></div>`:'<div class="meta">Aún no tienes tickets.</div>'}</div>`;
+  if(S.tab==='solicitar') return `
+    <h2 class="section">Solicitar servicio</h2>
+    <div class="card">
+      <label>Tipo de servicio</label>
+      <select id="svcType"><option>Mantenimiento Preventivo</option><option>Soporte Correctivo</option><option>Seguridad y Respaldo</option><option>Asistencia Corporativa</option></select>
+      <label>Describe el problema o necesidad</label>
+      <textarea id="svcDesc" rows="4" placeholder="Ej: El servidor SRV-02 no enciende..."></textarea>
+      <button class="primary" onclick="crearTicket()">Enviar solicitud</button>
+    </div>`;
+  if(S.tab==='mistickets') return `<h2 class="section">Mis tickets</h2>
+    <div class="card">${mt.length? mt.map(t=>`<div class="ticket"><div class="row"><div><b>${t.id} · ${t.svc}</b><div class="meta">${t.desc}</div></div>${badge(t.status)}</div></div>`).join('') : '<div class="meta">No tienes tickets todavía.</div>'}</div>`;
+  if(S.tab==='misequipos') return `<h2 class="section">Mis equipos</h2>
+    <div class="card">${me.length? me.map(e=>`<div class="ticket"><div><b>${dot(e.estado)} ${e.serie}</b><div class="meta">${e.modelo}</div></div></div>`).join('') : '<div class="meta">No hay equipos registrados.</div>'}</div>`;
+  if(S.tab==='perfil') return `<h2 class="section">Contacto y soporte</h2>
+    <div class="card">
+      <div class="contact-row"><div class="ic">💬</div><div><b>WhatsApp</b><div class="meta"><a href="https://wa.me/51993032328" target="_blank">+51 993 032 328</a></div></div></div>
+      <div class="contact-row"><div class="ic">✉️</div><div><b>Email</b><div class="meta"><a href="mailto:jlandas3115@gmail.com">jlandas3115@gmail.com</a></div></div></div>
+    </div>`;
+  return '';
+}
+async function crearTicket(){
+  const svc = document.getElementById('svcType').value;
+  const desc = document.getElementById('svcDesc').value || 'Sin descripción.';
+  const r = await api('/api/tickets', {method:'POST', body: JSON.stringify({svc, desc})});
+  if(r.ok){ await loadData(); S.tab='mistickets'; showToast('Ticket creado correctamente.'); }
+}
+
+function adminView(){
+  if(S.tab==='home'){
+    const pend = S.tickets.filter(t=>t.status==='pend').length;
+    return `<h2 class="section">Panel general</h2>
+    <div class="stat-row">
+      <div class="stat"><b>${S.tickets.length}</b><span>Tickets totales</span></div>
+      <div class="stat"><b>${pend}</b><span>Pendientes</span></div>
+      <div class="stat"><b>${S.clientes.length}</b><span>Clientes activos</span></div>
+      <div class="stat"><b>${S.equipos.length}</b><span>Equipos monitoreados</span></div>
+    </div>
+    <h2 class="section">Actividad reciente</h2>
+    <div class="card">${S.tickets.slice(0,3).map(t=>`<div class="ticket"><div class="row"><div><b>${t.id} · ${clienteById(t.clienteId).empresa}</b><div class="meta">${t.svc}</div></div>${badge(t.status)}</div></div>`).join('')}</div>`;
+  }
+  if(S.tab==='tickets') return `<h2 class="section">Todos los tickets</h2>
+    <div class="card">${S.tickets.map(t=>`<div class="ticket">
+        <div class="row"><div><b>${t.id} · ${clienteById(t.clienteId).empresa}</b><div class="meta">${t.svc} — ${t.desc}</div></div></div>
+        <div class="actions">
+          <select onchange="cambiarEstado('${t.id}',this.value)" style="width:auto;margin:8px 0 0;padding:5px 8px;font-size:11px">
+            <option value="pend" ${t.status==='pend'?'selected':''}>Pendiente</option>
+            <option value="proc" ${t.status==='proc'?'selected':''}>En proceso</option>
+            <option value="ok" ${t.status==='ok'?'selected':''}>Resuelto</option>
+          </select>
+        </div></div>`).join('')}</div>`;
+  if(S.tab==='clientes') return `<h2 class="section">Clientes</h2>
+    <div class="card">${S.clientes.map(c=>`<div class="ticket"><div class="row"><div><b>${c.empresa}</b><div class="meta">Plan ${c.plan} · usuario: ${c.user}</div></div><span class="badge b-proc">${S.tickets.filter(t=>t.clienteId===c.clienteId).length} ticket(s)</span></div></div>`).join('')}</div>`;
+  if(S.tab==='equipos') return `<h2 class="section">Inventario de equipos</h2>
+    <div class="card">${S.equipos.map(e=>`<div class="ticket"><div><b>${dot(e.estado)} ${e.serie}</b><div class="meta">${e.modelo} · Resp: ${e.resp} · ${clienteById(e.clienteId).empresa}</div></div></div>`).join('')}</div>`;
+  if(S.tab==='perfil') return `<h2 class="section">Cuenta</h2>
+    <div class="card"><b>Administrador LandShield Pro</b><div class="meta" style="margin-top:4px">jlandas3115@gmail.com</div></div>
+    <button class="ghost" onclick="logout()">Cerrar sesión</button>`;
+  return '';
+}
+async function cambiarEstado(id, status){
+  const r = await api('/api/ticket-status', {method:'POST', body: JSON.stringify({id, status})});
+  if(r.ok){
+    await loadData();
+    if(r.notified.email || r.notified.whatsapp){
+      showToast('Cliente notificado automáticamente por ' + [r.notified.email&&'email', r.notified.whatsapp&&'WhatsApp'].filter(Boolean).join(' y '));
+    } else {
+      let extra = '';
+      if(r.manual.wa) extra += ` <a href="${r.manual.wa}" target="_blank">Enviar WhatsApp manual</a>`;
+      if(r.manual.mail) extra += ` <a href="${r.manual.mail}" target="_blank">Enviar email manual</a>`;
+      showToast('Estado actualizado (notificación automática no configurada).');
+      if(extra) setTimeout(()=>{ document.getElementById('phone').insertAdjacentHTML('beforeend', `<div class="toast" style="bottom:130px">${extra}</div>`); }, 100);
+    }
+  }
+}
+boot();
+</script>
+</body>
+</html>
