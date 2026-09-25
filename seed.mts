@@ -2,7 +2,7 @@ import { getStore } from "@netlify/blobs";
 import bcrypt from "bcryptjs";
 
 const CLIENTES = [
-  { clienteId: "textiles-andina", user: "textiles-andina", pass: "ta2026", empresa: "Textiles Andina SAC", plan: "Corporativo", telefono: "51999111222", email: "contacto@textilesandina.pe" },
+  { clienteId: "textiles-andina", user: "juniorlanda", pass: "12345", empresa: "Textiles Andina SAC", plan: "Corporativo", telefono: "51999111222", email: "contacto@textilesandina.pe" },
   { clienteId: "grupo-velmar", user: "grupo-velmar", pass: "gv2026", empresa: "Grupo Velmar", plan: "Preventivo", telefono: "51999333444", email: "contacto@grupovelmar.pe" },
   { clienteId: "dominus", user: "dominus", pass: "dm2026", empresa: "Consultora Dominus", plan: "Seguridad", telefono: "51999555666", email: "contacto@dominus.pe" }
 ];
@@ -32,7 +32,7 @@ export default async (req: Request) => {
     await creds.setJSON(`cliente:${c.user}`, { user: c.user, hash, clienteId: c.clienteId, empresa: c.empresa });
     await clientesStore.setJSON(c.clienteId, { clienteId: c.clienteId, empresa: c.empresa, plan: c.plan, telefono: c.telefono, email: c.email, user: c.user });
   }
-  const adminHash = await bcrypt.hash(Netlify.env.get("ADMIN_PASSWORD") || "landshield2026", 10);
+  const adminHash = await bcrypt.hash(Netlify.env.get("ADMIN_PASSWORD") || "1234", 10);
   await creds.setJSON("admin", { user: "admin", hash: adminHash });
 
   for (const e of EQUIPOS) await equiposStore.setJSON(e.id, e);
